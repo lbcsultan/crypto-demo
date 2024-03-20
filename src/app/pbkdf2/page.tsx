@@ -4,6 +4,7 @@ import { useState } from 'react'
 import forge from 'node-forge'
 import Image from 'next/image'
 import axios from 'axios'
+import computePbkdf2 from '@/lib/computePbkdf2'
 
 export default function Pbkdf2Screen() {
   const [password, setPassword] = useState('supersecretpassword')
@@ -20,9 +21,7 @@ export default function Pbkdf2Screen() {
         setKey2(res.data.key)
       })
 
-    const derivedKey = forge.util.bytesToHex(
-      forge.pkcs5.pbkdf2(password, salt, iteration, keyLength)
-    )
+    const derivedKey = computePbkdf2(password, salt, iteration, keyLength)
 
     setKey1(derivedKey)
   }
@@ -99,7 +98,7 @@ export default function Pbkdf2Screen() {
             id="iteration"
             className="w-full bg-gray-50"
             value={iteration}
-            onChange={(e) => setIteration(e.target.value)}
+            onChange={(e) => setIteration(parseInt(e.target.value))}
           />
         </div>
 
@@ -113,7 +112,7 @@ export default function Pbkdf2Screen() {
             id="keyLength"
             className="w-full bg-gray-50"
             value={keyLength}
-            onChange={(e) => setKeyLength(e.target.value)}
+            onChange={(e) => setKeyLength(parseInt(e.target.value))}
           />
         </div>
 

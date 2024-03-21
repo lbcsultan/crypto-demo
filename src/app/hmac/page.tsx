@@ -32,6 +32,11 @@ export default function HMACPage() {
       <form className="mx-auto max-w-screen-lg">
         <h1 className="text-3xl mb-4 font-bold">HMAC (메시지인증코드) </h1>
 
+        <p className="mb-4">
+          메시지인증코드는 동일한 키를 공유하고 있는 송신자와 수신자가 전송하는
+          메시지의 인증성을 상대방에게 확인시키기 위해서 계산하는 값이다.
+          전송하는 메시지와 공유한 키를 입력으로 하여 해쉬값을 계산하는 것이다.
+        </p>
         <div className="mb-4 flex flex-row">
           <div className="basis-1/2">
             <label htmlFor="algo" className="mb-3 font-bold">
@@ -63,9 +68,7 @@ export default function HMACPage() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="secret" className="mb-3 font-bold">
-            Shared secret
-          </label>
+          <h2 className="mb-2 font-bold">Shared Secret</h2>
           <input
             type="text"
             name="secret"
@@ -87,15 +90,11 @@ export default function HMACPage() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="input" className="mb-3 font-bold">
-            Input Message
-          </label>
+          <h2 className="mb-2 font-bold">Input Message</h2>
           <textarea
             name="input"
             id="input"
-            cols="50"
-            rows="3"
-            className="w-full bg-gray-50"
+            className="w-full bg-gray-50 h-32"
             autoFocus
             placeholder="텍스트를 입력하세요"
             value={inputText}
@@ -114,16 +113,16 @@ export default function HMACPage() {
         </div>
 
         <div className="mb-4 overflow-x-auto">
-          <h2 className="mb-3 font-bold">Result</h2>
+          <h2 className="mb-2 font-bold">Result</h2>
           <div className="px-4 bg-slate-200">
             <p>Hash algorithm: {algorithm}</p>
             <p>Input text: {inputText}</p>
             <p>Shared secret: {secret}</p>
-            <p className="overflow-x-auto text-red-700">
+            <p className="break-words overflow-x-auto text-red-700 font-bold">
               HMAC value (client-side): {hmacValue1} ({hmacValue1.length * 4}{' '}
               bits)
             </p>
-            <p className="overflow-x-auto  text-blue-700">
+            <p className="break-words overflow-x-auto text-blue-700 font-bold">
               HMAC value (server-side): {hmacValue2} ({hmacValue2.length * 4}{' '}
               bits)
             </p>

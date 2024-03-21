@@ -10,7 +10,7 @@ export default function Pbkdf2Screen() {
   const [password, setPassword] = useState('supersecretpassword')
   const [salt, setSalt] = useState('')
   const [iteration, setIteration] = useState(1000)
-  const [keyLength, setKeyLength] = useState(16)
+  const [keyLength, setKeyLength] = useState(32)
   const [key1, setKey1] = useState('')
   const [key2, setKey2] = useState('')
 
@@ -51,9 +51,7 @@ export default function Pbkdf2Screen() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="password" className="mb-3 font-bold">
-            Input password
-          </label>
+          <h2 className="mb-2 font-bold">Input Password</h2>
           <input
             type="text"
             name="password"
@@ -65,9 +63,7 @@ export default function Pbkdf2Screen() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="salt" className="mb-3 font-bold">
-            Salt
-          </label>
+          <h2 className="mb-2 font-bold">Salt</h2>
           <input
             type="text"
             name="salt"
@@ -89,9 +85,7 @@ export default function Pbkdf2Screen() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="iteration" className="mb-3 font-bold">
-            Iteration
-          </label>
+          <h2 className="mb-2 font-bold">Iteration</h2>
           <input
             type="number"
             name="iteration"
@@ -103,9 +97,7 @@ export default function Pbkdf2Screen() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="keyLength" className="mb-3 font-bold">
-            Key Length
-          </label>
+          <h2 className="mb-2 font-bold">Key Length (bytes)</h2>
           <input
             type="number"
             name="keyLength"
@@ -127,16 +119,16 @@ export default function Pbkdf2Screen() {
         </div>
 
         <div className="mb-4 overflow-x-auto">
-          <h2 className="mb-3 font-bold">Result</h2>
+          <h2 className="mb-2 font-bold">Result</h2>
           <div className="px-4 bg-slate-200">
             <p>Password: {password}</p>
             <p>Salt: {salt}</p>
             <p>Iteration: {iteration}</p>
             <p>Key length: {keyLength} bytes</p>
-            <p className="overflow-x-auto text-red-700">
+            <p className="break-words overflow-x-auto text-red-700 font-bold">
               Generated key (client-side): {key1} ({key1.length * 4} bits)
             </p>
-            <p className="overflow-x-auto  text-blue-700">
+            <p className="break-words overflow-x-auto text-blue-700 font-bold">
               Generated key (server-side): {key2} ({key2.length * 4} bits)
             </p>
           </div>

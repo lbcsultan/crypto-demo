@@ -33,6 +33,22 @@ export default function HashPage() {
       <form onSubmit={handleSubmit} className="mx-auto max-w-screen-lg">
         <h1 className="text-3xl mb-4 font-bold">Hash (해시함수)</h1>
 
+        <p>
+          해시함수는 임의의 길이의 입력메시지에 대하여 고정된 길이의
+          특징값(해시값)을 계산해내는 함수이다. 키가 사용되지 않으므로
+          입력메시지가 같으면 동일한 해시값을 출력한다. 해시함수는 다음과 같은
+          특성을 만족시켜야 한다.
+        </p>
+        <ul className="mb-4">
+          <li>
+            1. 일방향성: 입력메시지로부터 해시값을 계산하는 것은 쉽지만 출력
+            해시값으로부터 그 해시값을 출력하는 입력메시지를 찾는 것은 어렵다.
+          </li>
+          <li>
+            2. 충돌회피성: 같은 해시값을 출력하는 두개의 입력메시지를 찾아내는
+            것은 어렵다.
+          </li>
+        </ul>
         <div className="mb-4 flex flex-row">
           <div className="basis-1/2">
             <label htmlFor="algo" className="mb-3 font-bold">
@@ -65,13 +81,11 @@ export default function HashPage() {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="input" className="font-bold">
-            Input Message
-          </label>
+          <h2 className="mb-2 font-bold">Input Message</h2>
           <textarea
             name="input"
             id="input"
-            className="w-full bg-gray-50"
+            className="w-full bg-gray-50 h-32"
             autoFocus
             placeholder="텍스트를 입력하세요"
             value={inputText}
@@ -86,15 +100,15 @@ export default function HashPage() {
         </div>
 
         <div className="mb-4 overflow-x-auto">
-          <h2 className="mb-3 font-bold">Result</h2>
+          <h2 className="mb-2 font-bold">Result</h2>
           <div className="px-4 bg-slate-200">
             <p>Hash algorithm: {algorithm}</p>
             <p>Input text: {inputText}</p>
-            <p className="overflow-x-auto text-red-700">
+            <p className="break-words overflow-x-auto text-red-700 font-bold">
               Hash value (client-side): {hashValue1} ({hashValue1.length * 4}{' '}
               bits)
             </p>
-            <p className="overflow-x-auto  text-blue-700">
+            <p className="break-words overflow-x-auto text-blue-700 font-bold">
               Hash value (server-side): {hashValue2} ({hashValue2.length * 4}{' '}
               bits)
             </p>

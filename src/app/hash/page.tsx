@@ -51,16 +51,17 @@ export default function HashPage() {
         </ul>
         <div className="mb-4 flex flex-row">
           <div className="basis-1/2">
-            <label htmlFor="algo" className="mb-3 font-bold">
+            <h2 className="mb-2 font-bold">
               Select Hash Algorithm (default to sha256)
-            </label>
+            </h2>
             {algorithms.map((algo) => (
               <div key={algo} className="mx-4 ">
                 <input
                   name="algo"
                   className="p-2 outline-none focus:ring-0"
-                  id={algo}
                   type="radio"
+                  id={algo}
+                  value={algorithm}
                   onChange={(e) => setAlgorithm(algo)}
                 />
                 <label className="p-2" htmlFor={algo}>

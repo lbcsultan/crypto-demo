@@ -28,6 +28,24 @@ export default function Navbar() {
         >
           PBKDF2
         </Link>
+        <Link
+          href="/passwordHash"
+          className="text-white text-lg font-bold px-2 hover:text-gray-400"
+        >
+          PasswordHash
+        </Link>
+        <Link
+          href="/aes"
+          className="text-white text-lg font-bold px-2 hover:text-gray-400"
+        >
+          AES
+        </Link>
+        <Link
+          href="/rsaenc"
+          className="text-white text-lg font-bold px-2 hover:text-gray-400"
+        >
+          RSAEnc
+        </Link>
       </div>
     </nav>
   )

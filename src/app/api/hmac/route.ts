@@ -1,6 +1,5 @@
 import computeHmac from '@/lib/computeHmac'
 import { NextResponse } from 'next/server'
-import forge from 'node-forge'
 
 export async function POST(request: any) {
   const { algorithm, inputText, secret } = await request.json()

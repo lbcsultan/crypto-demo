@@ -43,13 +43,15 @@ export default function Home() {
       <br />
       <div className="bg-red-200 font-bold px-4 py-2 rounded-md mb-4 w-max">
         <Link href="https://forge-crypto.netlify.app/">
-          Frontend Forge Demo
+          Frontend Forge Demo{' - '}
         </Link>
+        <Link href="https://github.com/lbcsultan/ForgeCrypto">Github</Link>
       </div>
       <div className="bg-red-200 font-bold px-4 py-2 rounded-md mb-4 w-max">
         <Link href="https://forge-demo.vercel.app/">
-          Nextjs Fullstack Forge Demo
+          Fullstack Forge Demo with Next.js{' - '}
         </Link>
+        <Link href="https://github.com/lbcsultan/forge-demo">Github</Link>
       </div>
 
       <div className="mx-20 my-5 ">

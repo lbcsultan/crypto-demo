@@ -3,7 +3,10 @@ import Link from 'next/link'
 export default function Navbar() {
   return (
     <nav className="flex justify-between items-center bg-black px-8 py-4">
-      <Link href="/" className="text-white text-2xl font-bold">
+      <Link
+        href="/"
+        className="text-white text-2xl font-bold hover:text-gray-400"
+      >
         Forge Demo
       </Link>
       <div>

@@ -10,7 +10,7 @@ export default function PasswordHashPage() {
   const [hpassword, setHpassword] = useState('')
   const [password1, setPassword1] = useState('supersecretpassword')
   const [result, setResult] = useState(false)
-  const [result1, setResult1] = useState(false)
+  // const [result1, setResult1] = useState(false)
 
   const submitHandler = async () => {
     let hash = bcrypt.hashSync(password, 8)
@@ -18,9 +18,9 @@ export default function PasswordHashPage() {
   }
 
   const loginHandler = async () => {
-    axios.post('/api/passwordHash', { password1, hpassword }).then((res) => {
-      setResult1(res.data.result)
-    })
+    // axios.post('/api/passwordHash', { password1, hpassword }).then((res) => {
+    //   setResult1(res.data.result)
+    // })
 
     const res = bcrypt.compareSync(password1, hpassword)
     setResult(res)
@@ -117,10 +117,10 @@ export default function PasswordHashPage() {
               Login result (client-side):{' '}
               {result ? '로그인 성공' : '로그인 실패'}
             </p>
-            <p className="text-red-700 font-bold">
+            {/* <p className="text-red-700 font-bold">
               Login result (server-side):{' '}
               {result1 ? '로그인 성공' : '로그인 실패'}
-            </p>
+            </p> */}
           </div>
         </div>
       </form>

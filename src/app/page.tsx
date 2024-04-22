@@ -1,7 +1,13 @@
+import { auth } from '@/auth'
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth()
+
+  if (!session) redirect('/signIn')
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">Forge Crypto Demo</h1>
@@ -58,7 +64,6 @@ export default function Home() {
         <Image
           src="/crypto.jpg"
           alt="crypto and encryption"
-          layout="responsive"
           width={500}
           height={500}
         />

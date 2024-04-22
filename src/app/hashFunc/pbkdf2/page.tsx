@@ -10,7 +10,7 @@ export default function Pbkdf2Screen() {
   const [password, setPassword] = useState('supersecretpassword')
   const [salt, setSalt] = useState('')
   const [iteration, setIteration] = useState(1000)
-  const [keyLength, setKeyLength] = useState(32)
+  const [keyLength, setKeyLength] = useState(16)
   const [key1, setKey1] = useState('')
   const [key2, setKey2] = useState('')
 
@@ -18,10 +18,12 @@ export default function Pbkdf2Screen() {
     axios
       .post('/api/pbkdf2', { password, salt, iteration, keyLength })
       .then((res) => {
-        setKey2(res.data.key)
+        setKey2(forge.util.bytesToHex(res.data.key))
       })
 
-    const derivedKey = computePbkdf2(password, salt, iteration, keyLength)
+    const derivedKey = forge.util.bytesToHex(
+      computePbkdf2(password, salt, iteration, keyLength)
+    )
 
     setKey1(derivedKey)
   }

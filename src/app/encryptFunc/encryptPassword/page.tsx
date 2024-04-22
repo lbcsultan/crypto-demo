@@ -3,13 +3,17 @@
 import { useState } from 'react'
 import forge from 'node-forge'
 import Image from 'next/image'
+import computePbkdf2 from '@/lib/computePbkdf2'
 
-export default function AESPage() {
+export default function EncryptPasswordPage() {
   const modes = ['ECB', 'CBC']
   const lengths = [128, 192, 256]
-
   const [mode, setMode] = useState('CBC')
   const [keyLength, setKeyLength] = useState(128)
+
+  const [password, setPassword] = useState('supersecretpassword')
+  const [salt, setSalt] = useState('')
+
   const [key, setKey] = useState('')
   const [keyHex, setKeyHex] = useState('')
   const [iv, setIv] = useState('')
@@ -22,8 +26,12 @@ export default function AESPage() {
   const [ciphertextHex, setCiphertextHex] = useState('')
   const [recoveredtext, setRecoveredtext] = useState('')
 
-  const randomKey = () => {
-    let key = forge.random.getBytesSync(keyLength / 8)
+  const randomSalt = () => {
+    setSalt(forge.util.bytesToHex(forge.random.getBytesSync(16)))
+  }
+
+  const pbkdf2KeyGen = () => {
+    let key = computePbkdf2(password, salt, 1000, keyLength / 8)
     let keyHex = forge.util.bytesToHex(key)
     let iv, ivHex
     setKey(key)
@@ -78,7 +86,9 @@ export default function AESPage() {
   return (
     <div>
       <form className="mx-auto max-w-screen-lg">
-        <h1 className="text-3xl mb-4 font-bold">AES (대칭키 암호화)</h1>
+        <h1 className="text-3xl mb-4 font-bold">
+          Password-based AES (패스워드 기반 대칭키 암호화)
+        </h1>
 
         <div className="mb-4">
           <p>
@@ -135,6 +145,50 @@ export default function AESPage() {
         </div>
 
         <div className="mb-4">
+          <h2 className="mb-2 font-bold">Input Password</h2>
+          <input
+            type="text"
+            name="password"
+            id="password"
+            className="w-full bg-gray-50"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <button
+            className="primary-button w-full"
+            type="button"
+            onClick={randomSalt}
+          >
+            Generate random salt
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <h2 className="mb-2 font-bold">Salt</h2>
+          <input
+            type="text"
+            name="salt"
+            id="salt"
+            className="w-full bg-gray-50"
+            value={salt}
+            onChange={(e) => setSalt(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <button
+            className="primary-button w-full"
+            type="button"
+            onClick={pbkdf2KeyGen}
+          >
+            PBKDF2 key generation (패스워드 기반 키생성)
+          </button>
+        </div>
+
+        <div className="mb-4">
           <h2 className="mb-2 font-bold">AES key</h2>
           <input
             type="text"
@@ -154,16 +208,6 @@ export default function AESPage() {
             value={ivHex}
             readOnly
           />
-        </div>
-
-        <div className="mb-4">
-          <button
-            className="primary-button w-full"
-            type="button"
-            onClick={randomKey}
-          >
-            Random key generation (난수 키 생성)
-          </button>
         </div>
 
         <div className="mb-4">

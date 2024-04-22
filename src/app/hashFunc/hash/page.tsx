@@ -2,6 +2,7 @@
 
 import computeHash from '@/lib/computeHash'
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useState } from 'react'
 

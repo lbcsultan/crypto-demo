@@ -52,13 +52,13 @@ export default async function Navbar() {
       </div>
       {session && session.user ? (
         <div className="flex items-center">
-          <Image
+          {/* <Image
             src={session?.user?.image}
             width={40}
             height={40}
             alt="avartar"
             className="rounded-full"
-          />
+          /> */}
           <p className="text-white text-lg font-bold px-2 ">
             {session.user.name}
           </p>

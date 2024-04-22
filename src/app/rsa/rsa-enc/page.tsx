@@ -67,9 +67,12 @@ export default function RSAEncPage() {
                   name="length"
                   className="p-2 outline-none focus:ring-0"
                   type="radio"
+                  id={length as any}
                   onChange={(e) => setKeyLength(length)}
                 />
-                <label className="p-2">{length}</label>
+                <label className="p-2" htmlFor={length as any}>
+                  {length}
+                </label>
               </div>
             ))}
           </div>

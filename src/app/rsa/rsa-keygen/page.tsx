@@ -81,11 +81,14 @@ export default function RSAKeyGenPage() {
               <div key={length} className="mx-4 ">
                 <input
                   name="length"
+                  id={length as any}
                   className="p-2 outline-none focus:ring-0"
                   type="radio"
                   onChange={(e) => setKeyLength(length)}
                 />
-                <label className="p-2">{length}</label>
+                <label className="p-2" htmlFor={length as any}>
+                  {length}
+                </label>
               </div>
             ))}
           </div>

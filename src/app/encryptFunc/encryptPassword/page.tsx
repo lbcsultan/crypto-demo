@@ -207,7 +207,7 @@ export default function EncryptPasswordPage() {
             type="button"
             onClick={pbkdf2KeyGen}
           >
-            PBKDF2 key generation (sender)
+            PBKDF2 key generation (sender, client)
           </button>
         </div>
 
@@ -249,7 +249,7 @@ export default function EncryptPasswordPage() {
             type="button"
             onClick={encryptHandler}
           >
-            Encrypt (sender)
+            Encrypt (sender, client)
           </button>
         </div>
 
@@ -284,7 +284,7 @@ export default function EncryptPasswordPage() {
             type="button"
             onClick={pbkdf2KeyGen2}
           >
-            PBKDF2 key generation (receiver)
+            PBKDF2 key generation (receiver, server)
           </button>
         </div>
 
@@ -305,7 +305,7 @@ export default function EncryptPasswordPage() {
             type="button"
             onClick={decryptHandler}
           >
-            Decrypt (receiver)
+            Decrypt (receiver, server)
           </button>
         </div>
 

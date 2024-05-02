@@ -57,19 +57,6 @@ export default function EncryptPage() {
     axios.post('/api/encrypt', { mode, key, iv, ciphertext }).then((res) => {
       setRecoveredtext(res.data.recoveredtext)
     })
-    // if (mode === 'ECB') {
-    //   let decipher = forge.cipher.createDecipher('AES-ECB', key)
-    //   decipher.start()
-    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
-    //   decipher.finish()
-    //   setRecoveredtext(decipher.output.toString())
-    // } else if (mode === 'CBC') {
-    //   let decipher = forge.cipher.createDecipher('AES-CBC', key)
-    //   decipher.start({ iv: iv })
-    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
-    //   decipher.finish()
-    //   setRecoveredtext(decipher.output.toString())
-    // }
   }
 
   return (
@@ -159,7 +146,7 @@ export default function EncryptPage() {
             type="button"
             onClick={randomKey}
           >
-            Random key generation (난수 키 생성)
+            Random key generation (sender, client)
           </button>
         </div>
 
@@ -179,7 +166,7 @@ export default function EncryptPage() {
             type="button"
             onClick={encryptHandler}
           >
-            Encrypt (암호화)
+            Encrypt (sender, client)
           </button>
         </div>
 
@@ -202,7 +189,7 @@ export default function EncryptPage() {
             type="button"
             onClick={decryptHandler}
           >
-            Decrypt (복호화)
+            Decrypt (receiver, server)
           </button>
         </div>
 

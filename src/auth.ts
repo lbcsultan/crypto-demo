@@ -3,8 +3,8 @@ import type { NextAuthConfig } from 'next-auth'
 
 import GitHub from 'next-auth/providers/github'
 import Google from 'next-auth/providers/google'
-// import connectMongoDB from './lib/mongodb'
-// import User from './models/user'
+import connectMongoDB from '@/lib/mongodb'
+import User from '@/models/user'
 
 const config: NextAuthConfig = {
   providers: [Google, GitHub],

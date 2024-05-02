@@ -18,7 +18,7 @@ export default async function SignInPage() {
           type="submit"
           className="text-2xl bg-slate-400 p-4 rounded-lg m-4"
         >
-          Signin with GitHub
+          Signin with GitHub (nextauth-v5 server login)
         </button>
       </form>
       <form
@@ -31,7 +31,7 @@ export default async function SignInPage() {
           type="submit"
           className="text-2xl bg-slate-400 p-4 rounded-lg m-4"
         >
-          Signin with Google
+          Signin with Google (nextauth-v5 localhost login)
         </button>
       </form>
     </div>

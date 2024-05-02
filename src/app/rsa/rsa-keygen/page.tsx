@@ -7,7 +7,7 @@ const rsa = forge.pki.rsa
 const pki = forge.pki
 
 export default function RSAKeyGenPage() {
-  const lengths = [1024, 2048, 3072, 32, 64, 128, 256, 512]
+  const lengths = [1024, 2048, 3072, 16, 20, 32, 64, 128, 256, 512]
 
   const [keyLength, setKeyLength] = useState(1024)
   const [publicKey, setPublicKey] = useState<forge.pki.rsa.PublicKey | null>()
@@ -24,7 +24,6 @@ export default function RSAKeyGenPage() {
   const keyGen = () => {
     const keypair: forge.pki.rsa.KeyPair = rsa.generateKeyPair({
       bits: keyLength,
-      e: 0x10001,
     })
     setPublicKey(keypair.publicKey)
     setPublicKeyPem(pki.publicKeyToPem(keypair.publicKey))

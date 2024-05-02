@@ -8,6 +8,7 @@ import computePbkdf2 from '@/lib/computePbkdf2'
 
 export default function Pbkdf2Screen() {
   const [password, setPassword] = useState('supersecretpassword')
+  const [password2, setPassword2] = useState('supersecretpassword')
   const [salt, setSalt] = useState('')
   const [iteration, setIteration] = useState(1000)
   const [keyLength, setKeyLength] = useState(16)
@@ -15,17 +16,18 @@ export default function Pbkdf2Screen() {
   const [key2, setKey2] = useState('')
 
   const submitHandler = async () => {
-    axios
-      .post('/api/pbkdf2', { password, salt, iteration, keyLength })
-      .then((res) => {
-        setKey2(forge.util.bytesToHex(res.data.key))
-      })
-
     const derivedKey = forge.util.bytesToHex(
       computePbkdf2(password, salt, iteration, keyLength)
     )
-
     setKey1(derivedKey)
+  }
+
+  const submitHandlerServer = async () => {
+    axios
+      .post('/api/pbkdf2', { password2, salt, iteration, keyLength })
+      .then((res) => {
+        setKey2(forge.util.bytesToHex(res.data.key))
+      })
   }
 
   const randomSalt = () => {
@@ -112,16 +114,16 @@ export default function Pbkdf2Screen() {
 
         <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="red-button w-full"
             type="button"
             onClick={submitHandler}
           >
-            Generate PBKDF2 key
+            Generate PBKDF2 key (client)
           </button>
         </div>
 
         <div className="mb-4 overflow-x-auto">
-          <h2 className="mb-2 font-bold">Result</h2>
+          <h2 className="mb-2 font-bold">Result (client)</h2>
           <div className="px-4 bg-slate-200">
             <p>Password: {password}</p>
             <p>Salt: {salt}</p>
@@ -130,6 +132,33 @@ export default function Pbkdf2Screen() {
             <p className="break-words overflow-x-auto text-red-700 font-bold">
               Generated key (client-side): {key1} ({key1.length * 4} bits)
             </p>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <h2 className="mb-2 font-bold">Input Password (server)</h2>
+          <input
+            type="text"
+            className="w-full bg-gray-50"
+            value={password2}
+            onChange={(e) => setPassword2(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <button
+            className="blue-button w-full"
+            type="button"
+            onClick={submitHandlerServer}
+          >
+            Generate PBKDF2 key (server)
+          </button>
+        </div>
+
+        <div className="mb-4 overflow-x-auto">
+          <h2 className="mb-2 font-bold">Result (server)</h2>
+          <div className="px-4 bg-slate-200">
+            <p>Password: {password2}</p>
             <p className="break-words overflow-x-auto text-blue-700 font-bold">
               Generated key (server-side): {key2} ({key2.length * 4} bits)
             </p>

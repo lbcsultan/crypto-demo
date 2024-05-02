@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import forge from 'node-forge'
 import Image from 'next/image'
-
+import axios from 'axios'
+import { computeEncrypt } from '@/lib/computeAES'
 export default function EncryptPage() {
   const modes = ['ECB', 'CBC']
   const lengths = [128, 192, 256]
@@ -42,37 +43,33 @@ export default function EncryptPage() {
   }
 
   const encryptHandler = () => {
-    if (mode === 'ECB') {
-      let cipher = forge.cipher.createCipher('AES-ECB', key)
-      cipher.start()
-      cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
-      cipher.finish()
-      setCiphertext(cipher.output)
-      setCiphertextHex(cipher.output.toHex())
-    } else if (mode === 'CBC') {
-      let cipher = forge.cipher.createCipher('AES-CBC', key)
-      cipher.start({ iv: iv })
-      cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
-      cipher.finish()
-      setCiphertext(cipher.output)
-      setCiphertextHex(cipher.output.toHex())
-    }
+    let ciphertext1 = computeEncrypt(
+      plaintext,
+      mode,
+      key,
+      iv
+    ) as forge.util.ByteStringBuffer
+    setCiphertext(ciphertext1)
+    setCiphertextHex(ciphertext1.toHex())
   }
 
-  const decryptHandler = () => {
-    if (mode === 'ECB') {
-      let decipher = forge.cipher.createDecipher('AES-ECB', key)
-      decipher.start()
-      decipher.update(ciphertext as forge.util.ByteStringBuffer)
-      decipher.finish()
-      setRecoveredtext(decipher.output.toString())
-    } else if (mode === 'CBC') {
-      let decipher = forge.cipher.createDecipher('AES-CBC', key)
-      decipher.start({ iv: iv })
-      decipher.update(ciphertext as forge.util.ByteStringBuffer)
-      decipher.finish()
-      setRecoveredtext(decipher.output.toString())
-    }
+  const decryptHandler = async () => {
+    axios.post('/api/encrypt', { mode, key, iv, ciphertext }).then((res) => {
+      setRecoveredtext(res.data.recoveredtext)
+    })
+    // if (mode === 'ECB') {
+    //   let decipher = forge.cipher.createDecipher('AES-ECB', key)
+    //   decipher.start()
+    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
+    //   decipher.finish()
+    //   setRecoveredtext(decipher.output.toString())
+    // } else if (mode === 'CBC') {
+    //   let decipher = forge.cipher.createDecipher('AES-CBC', key)
+    //   decipher.start({ iv: iv })
+    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
+    //   decipher.finish()
+    //   setRecoveredtext(decipher.output.toString())
+    // }
   }
 
   return (
@@ -178,7 +175,7 @@ export default function EncryptPage() {
 
         <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="red-button w-full"
             type="button"
             onClick={encryptHandler}
           >
@@ -201,7 +198,7 @@ export default function EncryptPage() {
 
         <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="blue-button w-full"
             type="button"
             onClick={decryptHandler}
           >

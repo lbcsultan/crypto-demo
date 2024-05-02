@@ -23,7 +23,6 @@ export default function RSASigPage() {
   const keyGen = () => {
     const keypair: forge.pki.rsa.KeyPair = rsa.generateKeyPair({
       bits: keyLength,
-      e: 0x10001,
     })
     setPublicKey(keypair.publicKey)
     setPublicKeyPem(pki.publicKeyToPem(keypair.publicKey))

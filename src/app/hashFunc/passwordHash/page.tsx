@@ -10,7 +10,7 @@ export default function PasswordHashPage() {
   const [hpassword, setHpassword] = useState('')
   const [password1, setPassword1] = useState('supersecretpassword')
   const [result, setResult] = useState(false)
-  // const [result1, setResult1] = useState(false)
+  const [result1, setResult1] = useState(false)
 
   const submitHandler = async () => {
     let hash = bcrypt.hashSync(password, 8)
@@ -18,12 +18,12 @@ export default function PasswordHashPage() {
   }
 
   const loginHandler = async () => {
-    // axios.post('/api/passwordHash', { password1, hpassword }).then((res) => {
-    //   setResult1(res.data.result)
-    // })
+    axios.post('/api/passwordHash', { password1, hpassword }).then((res) => {
+      setResult1(res.data.result)
+    })
 
-    const res = bcrypt.compareSync(password1, hpassword)
-    setResult(res)
+    // const res = bcrypt.compareSync(password1, hpassword)
+    // setResult(res)
   }
 
   return (
@@ -74,7 +74,7 @@ export default function PasswordHashPage() {
 
         <div className="mb-4">
           <h2 className="mb-2 font-bold">
-            Hashed Password (서버에 저장되는 패스워드해시){' '}
+            Hashed Password (서버에 저장되는 패스워드해시)
           </h2>
           <input
             type="text"
@@ -100,7 +100,7 @@ export default function PasswordHashPage() {
 
         <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="blue-button w-full"
             type="button"
             onClick={loginHandler}
           >
@@ -113,14 +113,14 @@ export default function PasswordHashPage() {
           <div className="px-4 bg-slate-200">
             <p>Registered password: {password}</p>
             <p>Login password: {password1}</p>
-            <p className="text-red-700 font-bold">
+            {/* <p className="text-red-700 font-bold">
               Login result (client-side):{' '}
               {result ? '로그인 성공' : '로그인 실패'}
-            </p>
-            {/* <p className="text-red-700 font-bold">
+            </p> */}
+            <p className="text-blue-700 font-bold">
               Login result (server-side):{' '}
               {result1 ? '로그인 성공' : '로그인 실패'}
-            </p> */}
+            </p>
           </div>
         </div>
       </form>

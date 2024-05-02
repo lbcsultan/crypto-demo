@@ -4,6 +4,8 @@ import { useState } from 'react'
 import forge from 'node-forge'
 import Image from 'next/image'
 import computePbkdf2 from '@/lib/computePbkdf2'
+import { computeDecrypt, computeEncrypt } from '@/lib/computeAES'
+import axios from 'axios'
 
 export default function EncryptPasswordPage() {
   const modes = ['ECB', 'CBC']
@@ -12,10 +14,13 @@ export default function EncryptPasswordPage() {
   const [keyLength, setKeyLength] = useState(128)
 
   const [password, setPassword] = useState('supersecretpassword')
+  const [password2, setPassword2] = useState('supersecretpassword')
   const [salt, setSalt] = useState('')
 
   const [key, setKey] = useState('')
   const [keyHex, setKeyHex] = useState('')
+  const [key2, setKey2] = useState('')
+  const [key2Hex, setKey2Hex] = useState('')
   const [iv, setIv] = useState('')
   const [ivHex, setIvHex] = useState('')
   const [plaintext, setPlaintext] = useState(
@@ -49,38 +54,56 @@ export default function EncryptPasswordPage() {
     }
   }
 
+  const pbkdf2KeyGen2 = () => {
+    let key2 = computePbkdf2(password2, salt, 1000, keyLength / 8)
+    let key2Hex = forge.util.bytesToHex(key2)
+    setKey2(key2)
+    setKey2Hex(key2Hex)
+  }
+
   const encryptHandler = () => {
-    if (mode === 'ECB') {
-      let cipher = forge.cipher.createCipher('AES-ECB', key)
-      cipher.start()
-      cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
-      cipher.finish()
-      setCiphertext(cipher.output)
-      setCiphertextHex(cipher.output.toHex())
-    } else if (mode === 'CBC') {
-      let cipher = forge.cipher.createCipher('AES-CBC', key)
-      cipher.start({ iv: iv })
-      cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
-      cipher.finish()
-      setCiphertext(cipher.output)
-      setCiphertextHex(cipher.output.toHex())
-    }
+    let ciphertext1 = computeEncrypt(
+      plaintext,
+      mode,
+      key,
+      iv
+    ) as forge.util.ByteStringBuffer
+    setCiphertext(ciphertext1)
+    setCiphertextHex(ciphertext1.toHex())
+    // if (mode === 'ECB') {
+    //   let cipher = forge.cipher.createCipher('AES-ECB', key)
+    //   cipher.start()
+    //   cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
+    //   cipher.finish()
+    //   setCiphertext(cipher.output)
+    //   setCiphertextHex(cipher.output.toHex())
+    // } else if (mode === 'CBC') {
+    //   let cipher = forge.cipher.createCipher('AES-CBC', key)
+    //   cipher.start({ iv: iv })
+    //   cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
+    //   cipher.finish()
+    //   setCiphertext(cipher.output)
+    //   setCiphertextHex(cipher.output.toHex())
+    // }
   }
 
   const decryptHandler = () => {
-    if (mode === 'ECB') {
-      let decipher = forge.cipher.createDecipher('AES-ECB', key)
-      decipher.start()
-      decipher.update(ciphertext as forge.util.ByteStringBuffer)
-      decipher.finish()
-      setRecoveredtext(decipher.output.toString())
-    } else if (mode === 'CBC') {
-      let decipher = forge.cipher.createDecipher('AES-CBC', key)
-      decipher.start({ iv: iv })
-      decipher.update(ciphertext as forge.util.ByteStringBuffer)
-      decipher.finish()
-      setRecoveredtext(decipher.output.toString())
-    }
+    axios.post('/api/encrypt', { mode, key, iv, ciphertext }).then((res) => {
+      setRecoveredtext(res.data.recoveredtext)
+    })
+    // if (mode === 'ECB') {
+    //   let decipher = forge.cipher.createDecipher('AES-ECB', key)
+    //   decipher.start()
+    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
+    //   decipher.finish()
+    //   setRecoveredtext(decipher.output.toString())
+    // } else if (mode === 'CBC') {
+    //   let decipher = forge.cipher.createDecipher('AES-CBC', key)
+    //   decipher.start({ iv: iv })
+    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
+    //   decipher.finish()
+    //   setRecoveredtext(decipher.output.toString())
+    // }
   }
 
   return (
@@ -145,7 +168,7 @@ export default function EncryptPasswordPage() {
         </div>
 
         <div className="mb-4">
-          <h2 className="mb-2 font-bold">Input Password</h2>
+          <h2 className="mb-2 font-bold">Input Password (sender)</h2>
           <input
             type="text"
             name="password"
@@ -180,16 +203,16 @@ export default function EncryptPasswordPage() {
 
         <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="red-button w-full"
             type="button"
             onClick={pbkdf2KeyGen}
           >
-            PBKDF2 key generation (패스워드 기반 키생성)
+            PBKDF2 key generation (sender)
           </button>
         </div>
 
         <div className="mb-4">
-          <h2 className="mb-2 font-bold">AES key</h2>
+          <h2 className="mb-2 font-bold">AES key (sender)</h2>
           <input
             type="text"
             name="key"
@@ -222,11 +245,11 @@ export default function EncryptPasswordPage() {
 
         <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="red-button w-full"
             type="button"
             onClick={encryptHandler}
           >
-            Encrypt (암호화)
+            Encrypt (sender)
           </button>
         </div>
 
@@ -244,12 +267,45 @@ export default function EncryptPasswordPage() {
         </div>
 
         <div className="mb-4">
+          <h2 className="mb-2 font-bold">Input Password (receiver)</h2>
+          <input
+            type="text"
+            name="password"
+            id="password"
+            className="w-full bg-gray-50"
+            value={password2}
+            onChange={(e) => setPassword2(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
           <button
-            className="primary-button w-full"
+            className="blue-button w-full"
+            type="button"
+            onClick={pbkdf2KeyGen2}
+          >
+            PBKDF2 key generation (receiver)
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <h2 className="mb-2 font-bold">AES key (receiver)</h2>
+          <input
+            type="text"
+            name="key"
+            className="w-full bg-gray-50"
+            value={key2Hex}
+            readOnly
+          />
+        </div>
+
+        <div className="mb-4">
+          <button
+            className="blue-button w-full"
             type="button"
             onClick={decryptHandler}
           >
-            Decrypt (복호화)
+            Decrypt (receiver)
           </button>
         </div>
 

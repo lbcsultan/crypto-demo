@@ -96,7 +96,7 @@ export default function HashPage() {
         </div>
 
         <div className="mb-4">
-          <button className="primary-button w-full" type="submit">
+          <button className="yellow-button w-full" type="submit">
             Compute Hash
           </button>
         </div>

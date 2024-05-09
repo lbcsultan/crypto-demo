@@ -26,7 +26,7 @@ export default async function Home() {
       </Link>
       <br />
 
-      <Link href="https://github.com/digitalbazaar/forge">
+      <Link href="https://www.npmjs.com/package/bcryptjs">
         <h3 className="text-xl mb-2 bg-slate-100">
           <span className="font-bold text-blue-600/100 px-2 py-1 rounded-lg bg-amber-200">
             bcryptjs
@@ -36,7 +36,7 @@ export default async function Home() {
       </Link>
       <br />
 
-      <Link href="https://github.com/digitalbazaar/forge">
+      <Link href="https://www.npmjs.com/package/jsonwebtoken">
         <h3 className="text-xl mb-2 bg-slate-100">
           <span className="font-bold text-blue-600/100 px-2 py-1 rounded-lg bg-amber-200">
             jsonwebtoken
@@ -64,7 +64,7 @@ export default async function Home() {
         <Image
           src="/crypto.jpg"
           alt="crypto and encryption"
-          width={500}
+          width={1000}
           height={500}
         />
       </div>

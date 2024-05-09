@@ -2,9 +2,7 @@
 
 import { useState } from 'react'
 import forge from 'node-forge'
-import { rsaSign, rsaVerify } from '@/lib/computeRSA'
 const ed25519 = forge.pki.ed25519
-const pki = forge.pki
 
 export default function ECDSAPage() {
   const [publicKey, setPublicKey] = useState<forge.pki.ed25519.NativeBuffer>()
@@ -23,9 +21,9 @@ export default function ECDSAPage() {
       privateKey: forge.pki.ed25519.NativeBuffer
     } = ed25519.generateKeyPair()
     setPublicKey(keypair.publicKey)
-    setPublicKeyPem(keypair.publicKey.toString())
+    setPublicKeyPem(forge.util.encode64(keypair.publicKey.toString()))
     setPrivateKey(keypair.privateKey)
-    setPrivateKeyPem(keypair.privateKey.toString())
+    setPrivateKeyPem(forge.util.encode64(keypair.privateKey.toString()))
   }
 
   const signHandler = () => {
@@ -37,7 +35,7 @@ export default function ECDSAPage() {
     })
 
     setSignature(sig)
-    setSignatureHex(sig.toString())
+    setSignatureHex(forge.util.encode64(sig.toString()))
   }
 
   const verifyHandler = () => {

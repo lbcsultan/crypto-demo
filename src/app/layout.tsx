@@ -7,7 +7,7 @@ import Providers from '@/components/Providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Crypto Demo',
+  title: 'Forge Crypto Demo',
   description: 'Node-forge crypto package',
 }
 

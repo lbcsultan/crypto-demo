@@ -34,7 +34,7 @@ export default function CertPage() {
   )
   const [certPem, setCertPem] = useState<string>('')
   const [caCertPem, setCaCertPem] = useState<string>('')
-  const [result, setResult] = useState<boolean>(false)
+  const [result, setResult] = useState(false)
 
   const keyGen = () => {
     const keypair = rsa.generateKeyPair({ bits: keyLength, e: 0x10001 })
@@ -66,6 +66,11 @@ export default function CertPage() {
       .then((res) => {
         let certPem = res.data.certPem
         let caCertPem = res.data.caCertPem
+        let cert = forge.pki.certificateFromPem(certPem)
+        console.log('Serial number: ' + cert.serialNumber)
+        console.log('Public key: \n' + forge.pki.publicKeyToPem(cert.publicKey))
+        console.log('Validity (not before): ' + cert.validity.notBefore)
+        console.log('Validity (not after): ' + cert.validity.notAfter)
         setCertPem(certPem)
         setCaCertPem(caCertPem)
         localStorage.setItem('certPem', certPem)
@@ -297,11 +302,11 @@ export default function CertPage() {
 
           <div className="mb-4">
             <button
-              className="primary-button w-full"
+              className="red-button w-full"
               type="button"
               onClick={genCert}
             >
-              Issue certificate
+              Issue certificate (인증서 발급 요청)
             </button>
           </div>
 
@@ -332,7 +337,7 @@ export default function CertPage() {
 
           <div className="mb-4">
             <button
-              className="primary-button w-full"
+              className="blue-button w-full"
               type="button"
               onClick={verifyCert}
             >
@@ -349,7 +354,7 @@ export default function CertPage() {
               name="verifyCert"
               id="verifyCert"
               className="w-full bg-gray-50"
-              value={result as any}
+              value={result ? '유효한 인증서' : '인증서가 유효하지 않음'}
               readOnly
             />
           </div>

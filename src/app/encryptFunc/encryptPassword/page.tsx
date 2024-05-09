@@ -70,40 +70,14 @@ export default function EncryptPasswordPage() {
     ) as forge.util.ByteStringBuffer
     setCiphertext(ciphertext1)
     setCiphertextHex(ciphertext1.toHex())
-    // if (mode === 'ECB') {
-    //   let cipher = forge.cipher.createCipher('AES-ECB', key)
-    //   cipher.start()
-    //   cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
-    //   cipher.finish()
-    //   setCiphertext(cipher.output)
-    //   setCiphertextHex(cipher.output.toHex())
-    // } else if (mode === 'CBC') {
-    //   let cipher = forge.cipher.createCipher('AES-CBC', key)
-    //   cipher.start({ iv: iv })
-    //   cipher.update(forge.util.createBuffer(forge.util.encodeUtf8(plaintext)))
-    //   cipher.finish()
-    //   setCiphertext(cipher.output)
-    //   setCiphertextHex(cipher.output.toHex())
-    // }
   }
 
   const decryptHandler = () => {
-    axios.post('/api/encrypt', { mode, key, iv, ciphertext }).then((res) => {
-      setRecoveredtext(res.data.recoveredtext)
-    })
-    // if (mode === 'ECB') {
-    //   let decipher = forge.cipher.createDecipher('AES-ECB', key)
-    //   decipher.start()
-    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
-    //   decipher.finish()
-    //   setRecoveredtext(decipher.output.toString())
-    // } else if (mode === 'CBC') {
-    //   let decipher = forge.cipher.createDecipher('AES-CBC', key)
-    //   decipher.start({ iv: iv })
-    //   decipher.update(ciphertext as forge.util.ByteStringBuffer)
-    //   decipher.finish()
-    //   setRecoveredtext(decipher.output.toString())
-    // }
+    axios
+      .post('/api/encrypt', { mode, key: key2, iv, ciphertext })
+      .then((res) => {
+        setRecoveredtext(res.data.recoveredtext)
+      })
   }
 
   return (

@@ -14,6 +14,9 @@ export default function RSAPage() {
       <div className="px-8 py-4 bg-blue-800 hover:bg-blue-600 text-white rounded-lg mb-4">
         <Link href="/rsa/rsa-sig">RSA Signature (전자서명)</Link>
       </div>
+      <div className="px-8 py-4 bg-blue-800 hover:bg-blue-600 text-white rounded-lg mb-4">
+        <Link href="/rsa/ecdsa">ECDSA Signature (타원곡선 전자서명)</Link>
+      </div>
     </div>
   )
 }

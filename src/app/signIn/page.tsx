@@ -7,7 +7,7 @@ export default async function SignInPage() {
   if (session) redirect('/')
 
   return (
-    <div className="flex flex-col gap-4 text-center">
+    <div className="flex flex-col gap-4 text-center mt-10">
       <form
         action={async () => {
           'use server'
@@ -18,7 +18,7 @@ export default async function SignInPage() {
           type="submit"
           className="text-2xl bg-slate-400 p-4 rounded-lg m-4"
         >
-          Signin with GitHub (nextauth-v5 server login)
+          Signin with GitHub (nextauth-v5 - server login)
         </button>
       </form>
       <form
@@ -31,7 +31,7 @@ export default async function SignInPage() {
           type="submit"
           className="text-2xl bg-slate-400 p-4 rounded-lg m-4"
         >
-          Signin with Google (nextauth-v5 localhost login)
+          Signin with Google (nextauth-v5 - localhost login)
         </button>
       </form>
     </div>

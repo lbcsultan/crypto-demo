@@ -1,7 +1,6 @@
 import { auth, signIn, signOut } from '@/auth'
 import Image from 'next/image'
 import Link from 'next/link'
-// import SignIn from './SignIn'
 
 export default async function Navbar() {
   const session = await auth()
@@ -12,7 +11,7 @@ export default async function Navbar() {
         href="/"
         className="text-white text-2xl font-bold hover:text-gray-400"
       >
-        Forge Demo
+        Forge Crypto Demo
       </Link>
       <div>
         <Link
@@ -51,14 +50,14 @@ export default async function Navbar() {
         </Link>
       </div>
       {session && session.user ? (
-        <div className="flex items-center">
-          {/* <Image
-            src={session?.user?.image}
+        <div className="flex items-center gap-2">
+          <Image
+            src={session?.user.image as any}
             width={40}
             height={40}
             alt="avartar"
             className="rounded-full"
-          /> */}
+          />
           <p className="text-white text-lg font-bold px-2 ">
             {session.user.name}
           </p>
@@ -70,7 +69,7 @@ export default async function Navbar() {
           >
             <button
               type="submit"
-              className="text-white text-lg font-bold px-2 hover:text-gray-400"
+              className="text-white text-lg bg-gray-500 rounded-md font-bold px-2 hover:text-gray-400"
             >
               Sign Out
             </button>

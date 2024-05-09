@@ -18,6 +18,8 @@ export default function HMACPage() {
   const submitHandler = async () => {
     let result = computeHmac(algorithm, inputText, secret)
     setHmacValue1(result)
+  }
+  const submitHandlerServer = async () => {
     axios.post('/api/hmac', { algorithm, inputText, secret }).then((res) => {
       setHmacValue2(res.data.hmacValue)
     })
@@ -102,13 +104,20 @@ export default function HMACPage() {
           ></textarea>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 flex gap-2">
           <button
-            className="primary-button w-full"
+            className="red-button w-full"
             type="button"
             onClick={submitHandler}
           >
-            Compute HMAC
+            Compute HMAC - Client
+          </button>
+          <button
+            className="blue-button w-full"
+            type="button"
+            onClick={submitHandlerServer}
+          >
+            Compute HMAC - Server
           </button>
         </div>
 

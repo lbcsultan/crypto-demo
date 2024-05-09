@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import forge from 'node-forge'
 import Image from 'next/image'
+import { rsaEncrypt } from '@/lib/computeRSA'
+import axios from 'axios'
 const rsa = forge.pki.rsa
 const pki = forge.pki
 
@@ -35,17 +37,19 @@ export default function RSAEncPage() {
   const encryptHandler = () => {
     let bytes = forge.util.encodeUtf8(plaintext)
     if (publicKey) {
-      let encrypted = publicKey.encrypt(bytes)
-      let encryptedHex = forge.util.bytesToHex(encrypted)
+      let encrypted = rsaEncrypt(publicKeyPem, bytes)
       setCiphertext(encrypted)
-      setCiphertextHex(encryptedHex)
+      setCiphertextHex(forge.util.bytesToHex(encrypted))
     }
   }
 
   const decryptHandler = () => {
     if (privateKey) {
-      let decrypted = privateKey.decrypt(ciphertext)
-      setRecoveredtext(forge.util.decodeUtf8(decrypted))
+      axios.post('/api/rsa-dec', { privateKeyPem, ciphertext }).then((res) => {
+        let decrypted = res.data.recoveredtext
+        setRecoveredtext(decrypted)
+        setRecoveredtext(forge.util.decodeUtf8(decrypted))
+      })
     }
   }
 
@@ -128,11 +132,11 @@ export default function RSAEncPage() {
 
           <div className="mb-4">
             <button
-              className="primary-button w-full"
+              className="red-button w-full"
               type="button"
               onClick={encryptHandler}
             >
-              Encrypt (암호화)
+              Encrypt (sender, client)
             </button>
           </div>
 
@@ -151,11 +155,11 @@ export default function RSAEncPage() {
 
           <div className="mb-4">
             <button
-              className="primary-button w-full"
+              className="blue-button w-full"
               type="button"
               onClick={decryptHandler}
             >
-              Decrypt (복호화)
+              Decrypt (receiver, server)
             </button>
           </div>
 

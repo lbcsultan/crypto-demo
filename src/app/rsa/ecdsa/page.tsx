@@ -3,42 +3,51 @@
 import { useState } from 'react'
 import forge from 'node-forge'
 import { rsaSign, rsaVerify } from '@/lib/computeRSA'
-const rsa = forge.pki.rsa
+const ed25519 = forge.pki.ed25519
 const pki = forge.pki
 
-export default function RSASigPage() {
-  const lengths = [1024, 2048, 3072, 32, 64, 128, 256, 512]
-
-  const [keyLength, setKeyLength] = useState(1024)
-  const [publicKey, setPublicKey] = useState<forge.pki.rsa.PublicKey | null>()
+export default function ECDSAPage() {
+  const [publicKey, setPublicKey] = useState<forge.pki.ed25519.NativeBuffer>()
   const [publicKeyPem, setPublicKeyPem] = useState('')
-  const [privateKey, setPrivateKey] =
-    useState<forge.pki.rsa.PrivateKey | null>()
+  const [privateKey, setPrivateKey] = useState<forge.pki.ed25519.NativeBuffer>()
   const [privateKeyPem, setPrivateKeyPem] = useState('')
 
   const [plaintext, setPlaintext] = useState('Hello world - 헬로월드')
-  const [signature, setSignature] = useState('')
+  const [signature, setSignature] = useState<forge.pki.ed25519.BinaryBuffer>('')
   const [signatureHex, setSignatureHex] = useState('')
   const [result, setResult] = useState('')
 
   const keyGen = () => {
-    const keypair: forge.pki.rsa.KeyPair = rsa.generateKeyPair({
-      bits: keyLength,
-    })
+    const keypair: {
+      publicKey: forge.pki.ed25519.NativeBuffer
+      privateKey: forge.pki.ed25519.NativeBuffer
+    } = ed25519.generateKeyPair()
     setPublicKey(keypair.publicKey)
-    setPublicKeyPem(pki.publicKeyToPem(keypair.publicKey))
+    setPublicKeyPem(keypair.publicKey.toString())
     setPrivateKey(keypair.privateKey)
-    setPrivateKeyPem(pki.privateKeyToPem(keypair.privateKey))
+    setPrivateKeyPem(keypair.privateKey.toString())
   }
 
   const signHandler = () => {
-    let sig = rsaSign(privateKeyPem, plaintext)
-    setSignature(sig as string)
-    setSignatureHex(forge.util.bytesToHex(sig as string))
+    let md = forge.md.sha256.create()
+    md.update(plaintext, 'utf8')
+    let sig: forge.pki.ed25519.BinaryBuffer = ed25519.sign({
+      md: md,
+      privateKey: privateKey as forge.pki.ed25519.BinaryBuffer,
+    })
+
+    setSignature(sig)
+    setSignatureHex(sig.toString())
   }
 
   const verifyHandler = () => {
-    let verified = rsaVerify(publicKeyPem, plaintext, signature)
+    var md = forge.md.sha256.create()
+    md.update(plaintext, 'utf8')
+    let verified: boolean = ed25519.verify({
+      md: md,
+      signature: signature as forge.pki.ed25519.BinaryBuffer,
+      publicKey: publicKey as forge.pki.ed25519.BinaryBuffer,
+    })
     setResult(verified ? '서명 OK' : '서명 Error')
   }
 
@@ -46,27 +55,9 @@ export default function RSASigPage() {
     <div>
       <div>
         <form className="mx-auto max-w-screen-lg">
-          <h1 className="text-3xl mb-4 font-bold">RSA Signature (전자서명)</h1>
-
-          <div className="mb-4">
-            <label htmlFor="mode" className="mb-3 font-bold">
-              Select Key Length (default to 1024)
-            </label>
-            {lengths.map((length) => (
-              <div key={length} className="mx-4 ">
-                <input
-                  name="length"
-                  className="p-2 outline-none focus:ring-0"
-                  type="radio"
-                  id={length as any}
-                  onChange={(e) => setKeyLength(length)}
-                />
-                <label className="p-2" htmlFor={length as any}>
-                  {length}
-                </label>
-              </div>
-            ))}
-          </div>
+          <h1 className="text-3xl mb-4 font-bold">
+            ECDSA Signature (타원곡선 전자서명)
+          </h1>
 
           <div className="mb-4">
             <button
@@ -74,7 +65,7 @@ export default function RSASigPage() {
               type="button"
               onClick={keyGen}
             >
-              RSA key generation (RSA 키 생성)
+              ED25519 key generation (타원곡선 키생성)
             </button>
           </div>
 
@@ -85,7 +76,7 @@ export default function RSASigPage() {
             <textarea
               name="key"
               id="key"
-              className="w-full bg-gray-50 h-32"
+              className="w-full bg-gray-50 h-24"
               value={publicKeyPem}
               readOnly
             />
@@ -98,7 +89,7 @@ export default function RSASigPage() {
             <textarea
               name="key"
               id="key"
-              className="w-full bg-gray-50 h-64"
+              className="w-full bg-gray-50 h-24"
               value={privateKeyPem}
               readOnly
             />
@@ -134,7 +125,7 @@ export default function RSASigPage() {
             <textarea
               name="signature"
               id="signature"
-              className="w-full bg-gray-50 h-16"
+              className="w-full bg-gray-50 h-24"
               value={signatureHex}
               readOnly
             />

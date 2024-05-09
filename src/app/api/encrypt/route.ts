@@ -1,6 +1,5 @@
 import { computeDecrypt } from '@/lib/computeAES'
 import { NextResponse } from 'next/server'
-import forge from 'node-forge'
 
 export async function POST(request: any) {
   const { mode, key, iv, ciphertext } = await request.json()

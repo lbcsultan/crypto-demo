@@ -23,6 +23,13 @@ export default function HashPage() {
 
     let result = computeHash(algorithm, inputText)
     setHashValue1(result as string)
+  }
+  const handleSubmitServer = async (e: any) => {
+    e.preventDefault()
+
+    if (!algorithm || !inputText) {
+      alert('Hash algorithm and input message are required!')
+    }
 
     axios.post('/api/hash', { algorithm, inputText }).then((res) => {
       setHashValue2(res.data.hashValue)
@@ -31,7 +38,7 @@ export default function HashPage() {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="mx-auto max-w-screen-lg">
+      <form className="mx-auto max-w-screen-lg">
         <h1 className="text-3xl mb-4 font-bold">Hash (해시함수)</h1>
 
         <p>
@@ -95,9 +102,13 @@ export default function HashPage() {
           ></textarea>
         </div>
 
-        <div className="mb-4">
-          <button className="yellow-button w-full" type="submit">
-            Compute Hash
+        <div className="mb-4 flex gap-2">
+          <button className="red-button w-full " onClick={handleSubmit}>
+            Compute Hash - Client
+          </button>
+
+          <button className="blue-button w-full" onClick={handleSubmitServer}>
+            Compute Hash - Server
           </button>
         </div>
 

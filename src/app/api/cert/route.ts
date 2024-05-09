@@ -133,7 +133,6 @@ export async function POST(request: any) {
   let caCertPem = forge.pki.certificateToPem(caCert)
 
   let result = caCert.verify(cert)
-  console.log('Verification: ', result)
 
   return NextResponse.json({ certPem, caCertPem }, { status: 200 })
 }

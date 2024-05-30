@@ -8,8 +8,7 @@ interface CertificateData {
 }
 
 export default async function CertUsersPage() {
-  const certificates = await prisma.certificate.findMany()
-  // const certificates = await getCerts()
+  const certificates: CertificateData[] = await prisma.certificate.findMany()
 
   return (
     <div>

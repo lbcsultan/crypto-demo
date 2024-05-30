@@ -2,7 +2,7 @@ import prisma from '@/lib/prismadb'
 import { User } from '@prisma/client'
 
 export default async function UsersPage() {
-  const users: User[] = await prisma.user.findMany()
+  const users = (await prisma.user.findMany()) as User[]
 
   return (
     <div>

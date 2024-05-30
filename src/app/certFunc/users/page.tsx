@@ -1,7 +1,9 @@
 import prisma from '@/lib/prismadb'
+import { User } from '@prisma/client'
 
 export default async function UsersPage() {
-  const users = await prisma.user.findMany()
+  const users: User[] = await prisma.user.findMany()
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">

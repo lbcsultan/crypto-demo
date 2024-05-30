@@ -1,6 +1,7 @@
 import { auth, signIn, signOut } from '@/auth'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export default async function Navbar() {
   const session = await auth()
@@ -29,25 +30,26 @@ export default async function Navbar() {
         </Link>
 
         <Link
-          href="/rsa"
+          href="/rsaFunc"
           className="text-white text-lg font-bold px-2 hover:text-gray-400"
         >
           공개키암호
         </Link>
 
         <Link
-          href="/cert"
+          href="/certFunc"
           className="text-white text-lg font-bold px-2 hover:text-gray-400"
         >
-          인증서발급
+          인증서
         </Link>
-
-        <Link
-          href="/protected"
-          className="text-white text-lg font-bold px-2 hover:text-gray-400"
-        >
-          ProtectedPage
-        </Link>
+        {session && (
+          <Link
+            href="/protected"
+            className="text-white text-lg font-bold px-2 hover:text-gray-400"
+          >
+            Protected
+          </Link>
+        )}
       </div>
       {session && session.user ? (
         <div className="flex items-center gap-2">
@@ -67,12 +69,14 @@ export default async function Navbar() {
               await signOut()
             }}
           >
-            <button
+            <Button
+              variant={'outline'}
+              size="lg"
+              className="font-bold text-lg"
               type="submit"
-              className="text-white text-lg bg-gray-500 rounded-md font-bold px-2 hover:text-gray-400"
             >
               Sign Out
-            </button>
+            </Button>
           </form>
         </div>
       ) : (
@@ -83,13 +87,16 @@ export default async function Navbar() {
               await signIn()
             }}
           >
-            <button
+            <Button
+              variant={'outline'}
+              size="lg"
+              className="font-bold text-lg"
               type="submit"
-              className="text-white text-lg font-bold px-2 hover:text-gray-400"
             >
               Sign In
-            </button>
+            </Button>
           </form>
+          {/* <LoginButton>Login</LoginButton> */}
         </>
       )}
     </nav>

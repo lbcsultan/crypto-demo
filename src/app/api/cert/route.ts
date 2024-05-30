@@ -1,3 +1,4 @@
+import prisma from '@/lib/prismadb'
 import { NextResponse } from 'next/server'
 
 import forge from 'node-forge'
@@ -10,7 +11,7 @@ const caPrivateKeyPem = process.env.CA_PRIVATE
 const caCert = pki.certificateFromPem(caCertPem as string)
 const caPrivateKey = pki.privateKeyFromPem(caPrivateKeyPem as string)
 
-export async function POST(request: any) {
+export async function POST(request: Request) {
   const { serial, cn, country, state, locality, org, orgUnit, publicKeyPem } =
     await request.json()
   const publicKey = pki.publicKeyFromPem(publicKeyPem)
@@ -132,7 +133,30 @@ export async function POST(request: any) {
   let certPem = forge.pki.certificateToPem(cert)
   let caCertPem = forge.pki.certificateToPem(caCert)
 
-  let result = caCert.verify(cert)
+  // let result = caCert.verify(cert)
+
+  try {
+    const existUser = await prisma.certificate.findUnique({
+      where: { ownerEmail: cn },
+    })
+    if (existUser) {
+      const updateCert = await prisma.certificate.update({
+        where: { ownerEmail: cn },
+        data: { certificate: certPem },
+      })
+      console.log('Certificate is updated!')
+    } else {
+      const newCert = await prisma.certificate.create({
+        data: {
+          ownerEmail: cn,
+          certificate: certPem,
+        },
+      })
+      console.log('New Certificate is saved!')
+    }
+  } catch (error) {
+    console.log(error)
+  }
 
   return NextResponse.json({ certPem, caCertPem }, { status: 200 })
 }

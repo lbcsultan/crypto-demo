@@ -15,9 +15,11 @@ export default function ClientPage() {
         use client <br />
         const session = useSession()
       </p>
-      <p>Username: {session?.user.name}</p>
+      <p>Name: {session?.user.name}</p>
       <p>Email: {session.user?.email}</p>
-      <p>{session?.user?.image}</p>
+      <p>Image: {session?.user?.image}</p>
+      <p>Expires at: {session?.expires}</p>
+      <p className="mt-4">JSON: {JSON.stringify(session)}</p>
     </div>
   )
 }

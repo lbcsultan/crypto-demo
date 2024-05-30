@@ -11,9 +11,11 @@ export default async function ServerPage() {
       <h1 className="text-2xl font-bold mb-4">Protected Server Page</h1>
       <p className="mb-4 bg-slate-300">const session = await auth()</p>
 
-      <p>Username: {session?.user.name}</p>
+      <p>Name: {session?.user.name}</p>
       <p>Email: {session.user?.email}</p>
-      <p>{session?.user?.image}</p>
+      <p>Image: {session?.user?.image}</p>
+      <p>Expires at: {session?.expires}</p>
+      <p className="mt-4">JSON: {JSON.stringify(session)}</p>
     </div>
   )
 }

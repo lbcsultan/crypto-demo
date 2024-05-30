@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import computeHash from '@/lib/computeHash'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'

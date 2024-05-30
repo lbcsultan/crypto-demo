@@ -1,7 +1,7 @@
 var forge = require('node-forge')
 var fs = require('fs')
 var pki = forge.pki
-var user = 'userA'
+var user = 'userB'
 
 // 사용자명 설정
 

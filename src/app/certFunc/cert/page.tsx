@@ -47,7 +47,6 @@ export default function CertPage() {
     setPublicKeyPem(publicKeyPem)
     setPrivateKey(privateKey)
     setPrivateKeyPem(privateKeyPem)
-    localStorage.setItem('privateKeyPem', privateKeyPem)
   }
 
   const genCert = async () => {
@@ -75,6 +74,7 @@ export default function CertPage() {
         setCaCertPem(caCertPem)
         localStorage.setItem('certPem', certPem)
         localStorage.setItem('caCertPem', caCertPem)
+        localStorage.setItem('privateKeyPem', privateKeyPem)
       })
   }
 

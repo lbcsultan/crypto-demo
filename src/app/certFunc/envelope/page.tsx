@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { getCerts } from '@/lib/user'
 import axios from 'axios'
 import { computeEncrypt } from '@/lib/computeAES'
+import { genEnv } from '@/lib/computeEnv'
 
 export default function EnvelopePage() {
   const { data: session } = useSession()
@@ -15,20 +16,11 @@ export default function EnvelopePage() {
 
   const certs = getCerts()
 
-  const sender = session.user.email
-  const receiver = session.user.email
+  const sender = session.user.email || null
+  const receiver = session.user.email || null
 
   // const [receiver, setReceiver] = useState('')
 
-  const modes = ['ECB', 'CBC']
-  const lengths = [128, 192, 256]
-
-  const [mode, setMode] = useState('CBC')
-  const [keyLength, setKeyLength] = useState(128)
-  const [key, setKey] = useState('')
-  const [keyHex, setKeyHex] = useState('')
-  const [iv, setIv] = useState('')
-  const [ivHex, setIvHex] = useState('')
   const [plaintext, setPlaintext] = useState(
     'Hello world - 헬로월드 - 全国の新たな感染者 - 备孕者可以接种新冠疫苗'
   )
@@ -41,41 +33,11 @@ export default function EnvelopePage() {
     // 수신자의 인증서를 가져옴. 공개키를 취득.
   }
 
-  const randomKey = () => {
-    let key = forge.random.getBytesSync(keyLength / 8)
-    let keyHex = forge.util.bytesToHex(key)
-    let iv, ivHex
-    setKey(key)
-    setKeyHex(keyHex)
-    if (mode === 'ECB') {
-      iv = ''
-      ivHex = ''
-      setIv(iv)
-      setIvHex(ivHex)
-    } else if (mode === 'CBC') {
-      iv = forge.random.getBytesSync(16)
-      ivHex = forge.util.bytesToHex(iv)
-      setIv(iv)
-      setIvHex(ivHex)
-    }
+  const genEnvHandler = () => {
+    // genEnv(plaintext, sender, receiver)
   }
 
-  const encryptHandler = () => {
-    let ciphertext1 = computeEncrypt(
-      plaintext,
-      mode,
-      key,
-      iv
-    ) as forge.util.ByteStringBuffer
-    setCiphertext(ciphertext1)
-    setCiphertextHex(ciphertext1.toHex())
-  }
-
-  const decryptHandler = async () => {
-    axios.post('/api/encrypt', { mode, key, iv, ciphertext }).then((res) => {
-      setRecoveredtext(res.data.recoveredtext)
-    })
-  }
+  const openEnvHandler = async () => {}
 
   return (
     <div>
@@ -121,74 +83,10 @@ export default function EnvelopePage() {
             disabled
           />
         </p>
-      </div>
-
-      <div className="mb-4">
-        <h2 className="mb-2 font-bold">Select Mode (default to CBC)</h2>
-        {modes.map((m) => (
-          <div key={m} className="mx-4">
-            <input
-              name="mode"
-              className="p-2 outline-none focus:ring-0"
-              id={m}
-              type="radio"
-              onChange={(e) => setMode(m)}
-            />
-            <label className="p-2" htmlFor={m}>
-              {m}
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <div className="mb-4">
-        <h2 className="mb-2 font-bold">Select Key Length (default to 128)</h2>
-        {lengths.map((length) => (
-          <div key={length} className="mx-4">
-            <input
-              name="length"
-              className="p-2 outline-none focus:ring-0"
-              id={length.toString()}
-              type="radio"
-              onChange={(e) => setKeyLength(length)}
-            />
-            <label className="p-2" htmlFor={length.toString()}>
-              {length}
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <div className="mb-4">
-        <h2 className="mb-2 font-bold">AES key</h2>
-        <input
-          type="text"
-          name="key"
-          className="w-full bg-gray-50"
-          value={keyHex}
-          readOnly
-        />
-      </div>
-
-      <div className="mb-4">
-        <h2 className="mb-2 font-bold">AES iv (default 128)</h2>
-        <input
-          type="text"
-          name="iv"
-          className="w-full bg-gray-50"
-          value={ivHex}
-          readOnly
-        />
-      </div>
-
-      <div className="mb-4">
-        <button
-          className="primary-button w-full"
-          type="button"
-          onClick={randomKey}
-        >
-          Random key generation (sender, client)
-        </button>
+        <p>
+          송신자와 수신자가 같은 경우를 먼저 고려함. 자신이 자신에게 보내는
+          전자봉투 모델
+        </p>
       </div>
 
       <div className="mb-4">
@@ -205,9 +103,9 @@ export default function EnvelopePage() {
         <button
           className="red-button w-full"
           type="button"
-          onClick={encryptHandler}
+          onClick={genEnvHandler}
         >
-          Encrypt (sender, client)
+          Envelope 생성 (sender)
         </button>
       </div>
 
@@ -228,9 +126,9 @@ export default function EnvelopePage() {
         <button
           className="blue-button w-full"
           type="button"
-          onClick={decryptHandler}
+          onClick={openEnvHandler}
         >
-          Decrypt (receiver, server)
+          Envelope 열기 (receiver)
         </button>
       </div>
 

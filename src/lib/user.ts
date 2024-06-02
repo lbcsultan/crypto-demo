@@ -41,3 +41,14 @@ export const getCerts = async () => {
     return null
   }
 }
+
+export const getCertByEmail = async (email: string) => {
+  try {
+    const certPem = await prisma.certificate.findUnique({
+      where: { ownerEmail: email },
+    })
+    return certPem
+  } catch (error) {
+    return null
+  }
+}
